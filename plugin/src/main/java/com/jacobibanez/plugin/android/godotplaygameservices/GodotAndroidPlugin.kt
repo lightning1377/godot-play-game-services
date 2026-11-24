@@ -12,6 +12,7 @@ import com.jacobibanez.plugin.android.godotplaygameservices.players.PlayersProxy
 import com.jacobibanez.plugin.android.godotplaygameservices.signals.getSignals
 import com.jacobibanez.plugin.android.godotplaygameservices.signin.SignInProxy
 import com.jacobibanez.plugin.android.godotplaygameservices.snapshots.SnapshotsProxy
+import org.godotengine.godot.Dictionary
 import org.godotengine.godot.Godot
 import org.godotengine.godot.plugin.GodotPlugin
 import org.godotengine.godot.plugin.SignalInfo
@@ -79,7 +80,9 @@ class GodotAndroidPlugin(godot: Godot) : GodotPlugin(godot) {
      * Use this method to check if the user is already authenticated. If the user is authenticated,
      * a popup will be shown on screen.
      *
-     * The method emits the [com.jacobibanez.plugin.android.godotplaygameservices.signals.SignInSignals.userAuthenticated] signal.
+     * The method emits the [com.jacobibanez.plugin.android.godotplaygameservices.signals.SignInSignals.userAuthenticated] signal,
+     * and on failure or unauthenticated result also emits [com.jacobibanez.plugin.android.godotplaygameservices.signals.SignInSignals.userAuthenticationFailed]
+     * immediately beforehand.
      */
     @UsedByGodot
     fun isAuthenticated() = signInProxy.isAuthenticated()
@@ -87,10 +90,19 @@ class GodotAndroidPlugin(godot: Godot) : GodotPlugin(godot) {
     /**
      * Use this method to provide a manual way to the user for signing in.
      *
-     * The method emits the [com.jacobibanez.plugin.android.godotplaygameservices.signals.SignInSignals.userAuthenticated] signal.
+     * The method emits the [com.jacobibanez.plugin.android.godotplaygameservices.signals.SignInSignals.userAuthenticated] signal,
+     * and on failure or unauthenticated result also emits [com.jacobibanez.plugin.android.godotplaygameservices.signals.SignInSignals.userAuthenticationFailed]
+     * immediately beforehand.
      */
     @UsedByGodot
     fun signIn() = signInProxy.signIn()
+
+    /**
+     * Returns diagnostic information about Google Play Services availability and the installed
+     * Google Play Games app (`com.google.android.play.games`) on the current device.
+     */
+    @UsedByGodot
+    fun getPlayServicesDiagnostics(): Dictionary = signInProxy.getPlayServicesDiagnostics()
 
     /**
      * Requests server-side access to Play Games Services for the currently signed-in player.

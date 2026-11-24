@@ -6,6 +6,7 @@ import org.godotengine.godot.plugin.SignalInfo
 /** @suppress */
 fun getSignals(): MutableSet<SignalInfo> = mutableSetOf(
     SignInSignals.userAuthenticated,
+    SignInSignals.userAuthenticationFailed,
     SignInSignals.serverSideAccessRequested,
 
     AchievementsSignals.achievementUnlocked,
@@ -45,6 +46,24 @@ object SignInSignals {
      * @return `true` if the user is authenticated. `false` otherwise.
      */
     val userAuthenticated = SignalInfo("userAuthenticated", Boolean::class.javaObjectType)
+
+    /**
+     * This signal is emitted when calling [com.jacobibanez.plugin.android.godotplaygameservices.GodotAndroidPlugin.isAuthenticated]
+     * or [com.jacobibanez.plugin.android.godotplaygameservices.GodotAndroidPlugin.signIn] fails or
+     * returns an unauthenticated result. Emitted immediately before [userAuthenticated] with `false`.
+     *
+     * @return `(statusCode, reason, message, source)` where `statusCode` is the `ApiException` status
+     * code (`0` for `not_authenticated`, `-1` for non-API exceptions or cancellation), `reason` is one
+     * of `"api_exception"`, `"task_exception"`, `"task_canceled"`, or `"not_authenticated"`,
+     * `message` is a human-readable diagnostic string, and `source` is `"isAuthenticated"` or `"signIn"`.
+     */
+    val userAuthenticationFailed = SignalInfo(
+        "userAuthenticationFailed",
+        Int::class.javaObjectType,
+        String::class.java,
+        String::class.java,
+        String::class.java
+    )
 
     /**
      * This signal is emitted when calling the [com.jacobibanez.plugin.android.godotplaygameservices.GodotAndroidPlugin.requestServerSideAccess] method.
